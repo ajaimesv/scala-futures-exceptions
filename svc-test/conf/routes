@@ -1,0 +1,8 @@
+GET     /a          controllers.HomeController.a
+GET     /ae         controllers.HomeController.ae
+GET     /b          controllers.HomeController.b
+GET     /be         controllers.HomeController.be
+GET     /c          controllers.HomeController.c
+GET     /ce         controllers.HomeController.ce
+GET     /d          controllers.HomeController.d
+GET     /de         controllers.HomeController.de

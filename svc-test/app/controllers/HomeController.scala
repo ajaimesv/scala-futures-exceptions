@@ -14,6 +14,7 @@ import scala.concurrent.duration._
 import play.api.libs.concurrent.Futures._
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 
 @Singleton
@@ -123,11 +124,11 @@ class HomeController @Inject()(
     request.body.validate[Person].fold (
       errors => Future.successful(BadRequest(Json.obj("error" -> "invalid json request"))),
       person => {
-        val task100 = LongTasks.taskPerson(person).withTimeout(1.second)
+        val task = LongTasks.taskPerson(person).withTimeout(1.second)
         for {
-          i <- task100
+          person <- task
         } yield {
-          Ok(Json.obj("value" -> i))
+          Ok(Json.obj("value" -> person))
         }
       }
     )

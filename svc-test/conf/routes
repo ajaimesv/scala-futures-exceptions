@@ -6,3 +6,8 @@ GET     /c          controllers.HomeController.c
 GET     /ce         controllers.HomeController.ce
 GET     /d          controllers.HomeController.d
 GET     /de         controllers.HomeController.de
+
++nocsrf
+POST    /e          controllers.HomeController.e
+POST    /g          controllers.HomeController.g
+POST    /ge         controllers.HomeController.ge

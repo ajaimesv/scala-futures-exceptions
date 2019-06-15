@@ -2,8 +2,9 @@ package controllers
 
 import exceptions.SomeException
 import javax.inject._
+import models.Person
 import play.api.libs.concurrent.Futures
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 import service.LongTasks
@@ -11,6 +12,8 @@ import service.LongTasks
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Futures._
+
+import scala.concurrent.Future
 
 
 @Singleton
@@ -97,6 +100,53 @@ class HomeController @Inject()(
     } recover {
       case e: Exception => InternalServerError(Json.obj("error" -> e.getMessage))
     }
+  }
+
+  def e() = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    val personResult = request.body.validate[Person].asOpt
+
+    personResult match {
+      case Some(person) => {
+        val task100 = LongTasks.taskPerson(person).withTimeout(1.second)
+        for {
+          i <- task100
+        } yield {
+          Ok(Json.obj("value" -> i))
+        }
+      }
+      case None => Future.successful(BadRequest(Json.obj("error" -> "invalid json request")))
+    }
+
+  }
+
+  def g() = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    request.body.validate[Person].fold (
+      errors => Future.successful(BadRequest(Json.obj("error" -> "invalid json request"))),
+      person => {
+        val task100 = LongTasks.taskPerson(person).withTimeout(1.second)
+        for {
+          i <- task100
+        } yield {
+          Ok(Json.obj("value" -> i))
+        }
+      }
+    )
+  }
+
+  def ge() = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    request.body.validate[Person].fold (
+      errors => Future.successful(BadRequest(Json.obj("error" -> "invalid json request"))),
+      person => {
+        val task100 = LongTasks.taskEx().withTimeout(1.second)
+        (for {
+          i <- task100
+        } yield {
+          Ok(Json.obj("value" -> i))
+        }) recover {
+          case e: SomeException => InternalServerError(Json.obj("error" -> e.getMessage))
+        }
+      }
+    )
   }
 
 }

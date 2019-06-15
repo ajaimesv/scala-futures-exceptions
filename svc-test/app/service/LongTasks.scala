@@ -1,6 +1,7 @@
 package service
 
 import exceptions.SomeException
+import models.Person
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,6 +20,13 @@ object LongTasks {
     Future {
       Thread.sleep(200)
       200
+    }
+  }
+
+  def taskPerson(person: Person): Future[Person] = {
+    Future {
+      Thread.sleep(100)
+      person
     }
   }
 

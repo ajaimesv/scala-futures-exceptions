@@ -1,6 +1,6 @@
 # Scala Futures and Exceptions
 
-This project provides examples on how to manage futures and exceptions from PlayFramework Actions.
+This project provides examples on how to manage futures and exceptions on PlayFramework Actions.
 
 The controller file includes several examples. Those functions that end with "e" have explicit exception management. For example in function `a` and function `ae`.
 
